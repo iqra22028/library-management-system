@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LibraryOS —  Library Management</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ── SIDEBAR ─────────────────────────────────────────── -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 40 40" fill="none">
+            <rect width="40" height="40" rx="10" fill="#f0c040"/>
+            <rect x="8" y="10" width="6" height="20" rx="1" fill="#1a3a5c"/>
+            <rect x="17" y="8" width="6" height="22" rx="1" fill="#1a3a5c"/>
+            <rect x="26" y="12" width="6" height="18" rx="1" fill="#1a3a5c"/>
+          </svg>
+        </div>
+        <div class="logo-text">
+          <span class="logo-name">LibraryOS</span>
+          <span class="logo-sub">NED University</span>
+        </div>
+      </div>
+      <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+      <a href="#" class="nav-item active" data-page="dashboard">
+        <svg class="nav-icon" viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+        <span>Dashboard</span>
+        <div class="nav-active-bar"></div>
+      </a>
+      <a href="#" class="nav-item" data-page="books">
+        <svg class="nav-icon" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>
+        <span>Books</span>
+        <div class="nav-active-bar"></div>
+      </a>
+      <a href="#" class="nav-item" data-page="members">
+        <svg class="nav-icon" viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+        <span>Members</span>
+        <div class="nav-active-bar"></div>
+      </a>
+
+      <div class="nav-section-label">Transactions</div>
+      <a href="#" class="nav-item" data-page="issue">
+        <svg class="nav-icon" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L21 8l-9 9z"/></svg>
+        <span>Issue Book</span>
+        <div class="nav-active-bar"></div>
+      </a>
+      <a href="#" class="nav-item" data-page="transactions">
+        <svg class="nav-icon" viewBox="0 0 24 24"><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>
+        <span>Transactions</span>
+        <div class="nav-active-bar"></div>
+      </a>
+
+      <div class="nav-section-label">Admin</div>
+      <a href="#" class="nav-item" data-page="addbook">
+        <svg class="nav-icon" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+        <span>Add Book</span>
+        <div class="nav-active-bar"></div>
+      </a>
+      <a href="#" class="nav-item" data-page="addmember">
+        <svg class="nav-icon" viewBox="0 0 24 24"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+        <span>Add Member</span>
+        <div class="nav-active-bar"></div>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-card">
+        <div class="user-avatar" id="userAvatar">IA</div>
+        <div class="user-info">
+          <span class="user-name" id="userDisplayName">Iqra Shahid</span>
+          <span class="user-role" id="userDisplayRole">Administrator</span>
+        </div>
+        <button class="logout-btn" id="logoutBtn" title="Logout">
+          <svg viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── MAIN CONTENT ────────────────────────────────────── -->
+  <main class="main-content" id="mainContent">
+
+    <!-- TOP BAR -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+          <span></span><span></span><span></span>
+        </button>
+        <div class="breadcrumb">
+          <span class="breadcrumb-home">LibraryOS</span>
+          <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+          <span class="breadcrumb-current" id="breadcrumbCurrent">Dashboard</span>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="search-bar">
+          <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+          <input type="text" id="globalSearch" placeholder="Search books, members…" autocomplete="off" />
+          <div class="search-results" id="searchResults"></div>
+        </div>
+        <div class="notif-btn">
+          <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+          <span class="notif-badge" id="notifBadge">0</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- ── PAGE: DASHBOARD ── -->
+    <section class="page active" id="page-dashboard">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Dashboard</h1>
+          <p class="page-subtitle">Library overview &amp; recent activity</p>
+        </div>
+        <div class="page-actions">
+          <span class="date-badge" id="currentDate"></span>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card" data-color="blue">
+          <div class="stat-icon">
+            <svg viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>
+          </div>
+          <div class="stat-body">
+            <span class="stat-label">Total Books</span>
+            <span class="stat-value" id="stat-books">0</span>
+            <span class="stat-change positive">+3 this week</span>
+          </div>
+        </div>
+        <div class="stat-card" data-color="green">
+          <div class="stat-icon">
+            <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+          </div>
+          <div class="stat-body">
+            <span class="stat-label">Active Members</span>
+            <span class="stat-value" id="stat-members">0</span>
+            <span class="stat-change positive">+1 today</span>
+          </div>
+        </div>
+        <div class="stat-card" data-color="orange">
+          <div class="stat-icon">
+            <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L21 8l-9 9z"/></svg>
+          </div>
+          <div class="stat-body">
+            <span class="stat-label">Books Issued</span>
+            <span class="stat-value" id="stat-issued">0</span>
+            <span class="stat-change">Currently out</span>
+          </div>
+        </div>
+        <div class="stat-card" data-color="red">
+          <div class="stat-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+          </div>
+          <div class="stat-body">
+            <span class="stat-label">Overdue</span>
+            <span class="stat-value" id="stat-overdue">0</span>
+            <span class="stat-change negative" id="stat-fines">PKR 0 fines</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dashboard-grid">
+        <div class="card recent-transactions">
+          <div class="card-header">
+            <h3>Recent Transactions</h3>
+            <button class="card-btn" data-page="transactions">View All</button>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr><th>Member</th><th>Book</th><th>Issue Date</th><th>Due</th><th>Status</th></tr>
+              </thead>
+              <tbody id="recentTxTable">
+                <tr class="empty-row"><td colspan="5">No transactions yet</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card availability-chart">
+          <div class="card-header">
+            <h3>Book Availability</h3>
+          </div>
+          <div class="donut-chart-wrap">
+            <svg class="donut-chart" id="donutChart" viewBox="0 0 180 180">
+              <circle class="donut-ring" cx="90" cy="90" r="70" fill="transparent" stroke="#EEF2F6" stroke-width="28"/>
+              <circle class="donut-seg seg-available" cx="90" cy="90" r="70" fill="transparent" stroke="#1e6b3e" stroke-width="28"
+                stroke-dasharray="0 440" stroke-dashoffset="110" style="transition:stroke-dasharray 1.2s cubic-bezier(.4,0,.2,1)"/>
+              <circle class="donut-seg seg-issued" cx="90" cy="90" r="70" fill="transparent" stroke="#f0a030" stroke-width="28"
+                stroke-dasharray="0 440" stroke-dashoffset="110" style="transition:stroke-dasharray 1.2s cubic-bezier(.4,0,.2,1) 0.2s"/>
+              <circle class="donut-seg seg-overdue" cx="90" cy="90" r="70" fill="transparent" stroke="#c0392b" stroke-width="28"
+                stroke-dasharray="0 440" stroke-dashoffset="110" style="transition:stroke-dasharray 1.2s cubic-bezier(.4,0,.2,1) 0.4s"/>
+              <text x="90" y="84" class="donut-center-num" id="donutCenterNum">0</text>
+              <text x="90" y="104" class="donut-center-label">Total Books</text>
+            </svg>
+            <div class="donut-legend">
+              <div class="legend-item"><span class="legend-dot" style="background:#1e6b3e"></span>Available</div>
+              <div class="legend-item"><span class="legend-dot" style="background:#f0a030"></span>Issued</div>
+              <div class="legend-item"><span class="legend-dot" style="background:#c0392b"></span>Overdue</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── PAGE: BOOKS ── -->
+    <section class="page" id="page-books">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Book Catalog</h1>
+          <p class="page-subtitle">Manage the library's book collection</p>
+        </div>
+        <button class="btn btn-primary" data-page="addbook">
+          <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+          Add Book
+        </button>
+      </div>
+      <div class="filter-bar">
+        <div class="search-inline">
+          <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+          <input type="text" id="bookSearch" placeholder="Search title, author, ISBN, genre…" />
+        </div>
+        <select id="genreFilter" class="filter-select">
+          <option value="">All Genres</option>
+          <option>Software Engineering</option>
+          <option>Computer Science</option>
+          <option>Databases</option>
+          <option>Mathematics</option>
+          <option>Fiction</option>
+        </select>
+        <select id="availFilter" class="filter-select">
+          <option value="">All Status</option>
+          <option value="available">Available</option>
+          <option value="unavailable">Unavailable</option>
+        </select>
+      </div>
+      <div class="card">
+        <div class="table-wrap">
+          <table class="data-table" id="booksTable">
+            <thead>
+              <tr><th>#</th><th>Title</th><th>Author</th><th>ISBN</th><th>Genre</th><th>Available</th><th>Total</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="booksTableBody">
+              <tr class="empty-row"><td colspan="8">No books added yet</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── PAGE: MEMBERS ── -->
+    <section class="page" id="page-members">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Members</h1>
+          <p class="page-subtitle">Registered library members</p>
+        </div>
+        <button class="btn btn-primary" data-page="addmember">
+          <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+          Add Member
+        </button>
+      </div>
+      <div class="card">
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr><th>#</th><th>Name</th><th>Username</th><th>Email</th><th>Phone</th><th>Status</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="membersTableBody">
+              <tr class="empty-row"><td colspan="7">No members registered yet</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── PAGE: ISSUE BOOK ── -->
+    <section class="page" id="page-issue">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Issue Book</h1>
+          <p class="page-subtitle">Issue a book to a registered member</p>
+        </div>
+      </div>
+      <div class="form-card">
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label">Select Member <span class="required">*</span></label>
+            <select id="issueMember" class="form-control form-select">
+              <option value="">— Choose Member —</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Select Book <span class="required">*</span></label>
+            <select id="issueBook" class="form-control form-select">
+              <option value="">— Choose Book —</option>
+            </select>
+          </div>
+        </div>
+        <div class="issue-info-box" id="issueInfoBox" style="display:none">
+          <div class="info-row"><span>Issue Date:</span><strong id="issueDate"></strong></div>
+          <div class="info-row"><span>Due Date:</span><strong id="dueDate" style="color:#c0392b"></strong></div>
+          <div class="info-row"><span>Lending Period:</span><strong>14 days</strong></div>
+        </div>
+        <button class="btn btn-primary btn-lg" id="issueBtnSubmit">
+          <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L21 8l-9 9z"/></svg>
+          Issue Book
+        </button>
+      </div>
+    </section>
+
+    <!-- ── PAGE: TRANSACTIONS ── -->
+    <section class="page" id="page-transactions">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Transactions</h1>
+          <p class="page-subtitle">All borrowing records</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr><th>#</th><th>Member</th><th>Book</th><th>Issued</th><th>Due</th><th>Returned</th><th>Fine</th><th>Status</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="txTableBody">
+              <tr class="empty-row"><td colspan="9">No transactions yet</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── PAGE: ADD BOOK ── -->
+    <section class="page" id="page-addbook">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Add New Book</h1>
+          <p class="page-subtitle">Add a book to the catalog</p>
+        </div>
+        <button class="btn btn-ghost" data-page="books">← Back to Books</button>
+      </div>
+      <div class="form-card">
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label">Title <span class="required">*</span></label>
+            <input type="text" id="bookTitle" class="form-control" placeholder="e.g. Clean Code" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Author <span class="required">*</span></label>
+            <input type="text" id="bookAuthor" class="form-control" placeholder="e.g. Robert C. Martin" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">ISBN</label>
+            <input type="text" id="bookISBN" class="form-control" placeholder="e.g. 9780132350884" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Genre</label>
+            <input type="text" id="bookGenre" class="form-control" placeholder="e.g. Software Engineering" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Number of Copies</label>
+            <input type="number" id="bookCopies" class="form-control" value="1" min="1" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Published Year</label>
+            <input type="number" id="bookYear" class="form-control" placeholder="e.g. 2020" />
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-primary btn-lg" id="addBookBtn">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+            Add Book
+          </button>
+          <button class="btn btn-ghost" id="resetBookBtn">Reset</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── PAGE: ADD MEMBER ── -->
+    <section class="page" id="page-addmember">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Register Member</h1>
+          <p class="page-subtitle">Add a new library member</p>
+        </div>
+        <button class="btn btn-ghost" data-page="members">← Back to Members</button>
+      </div>
+      <div class="form-card">
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label">Full Name <span class="required">*</span></label>
+            <input type="text" id="memberName" class="form-control" placeholder="e.g. Ahmed Ali" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Username <span class="required">*</span></label>
+            <input type="text" id="memberUsername" class="form-control" placeholder="e.g. ahmed01" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input type="email" id="memberEmail" class="form-control" placeholder="e.g. ahmed@ned.edu.pk" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Phone</label>
+            <input type="text" id="memberPhone" class="form-control" placeholder="e.g. 0300-1234567" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password <span class="required">*</span></label>
+            <input type="password" id="memberPassword" class="form-control" placeholder="Set a password" />
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-primary btn-lg" id="addMemberBtn">
+            <svg viewBox="0 0 24 24"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            Register Member
+          </button>
+          <button class="btn btn-ghost" id="resetMemberBtn">Reset</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── TOAST NOTIFICATION ── -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- ── MODAL ── -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal" id="modal">
+      <div class="modal-header">
+        <h3 id="modalTitle">Confirm</h3>
+        <button class="modal-close" id="modalClose">×</button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="modalCancel">Cancel</button>
+        <button class="btn btn-danger" id="modalConfirm">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── LOGIN SCREEN ── -->
+  <div class="login-overlay" id="loginOverlay">
+    <div class="login-card">
+      <div class="login-logo">
+        <div class="login-logo-icon">
+          <svg viewBox="0 0 40 40" fill="none">
+            <rect width="40" height="40" rx="10" fill="#f0c040"/>
+            <rect x="8" y="10" width="6" height="20" rx="1" fill="#1a3a5c"/>
+            <rect x="17" y="8" width="6" height="22" rx="1" fill="#1a3a5c"/>
+            <rect x="26" y="12" width="6" height="18" rx="1" fill="#1a3a5c"/>
+          </svg>
+        </div>
+        <h2>LibraryOS</h2>
+        <p>NED University Library Management</p>
+      </div>
+
+      <!-- TAB SWITCHER -->
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tabSignIn" onclick="switchTab('signin')">Sign In</button>
+        <button class="auth-tab" id="tabSignUp" onclick="switchTab('signup')">Create Account</button>
+      </div>
+
+      <!-- SIGN IN FORM -->
+      <div class="auth-form" id="formSignIn">
+        <div class="form-group">
+          <label class="form-label">Username</label>
+          <input type="text" id="loginUsername" class="form-control" placeholder="Enter your username" value="admin" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <div class="pw-wrap">
+            <input type="password" id="loginPassword" class="form-control" placeholder="Enter your password" value="admin123" />
+            <button class="pw-toggle" onclick="togglePw('loginPassword', this)" type="button">
+              <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+            </button>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-full" id="loginBtn">Sign In →</button>
+        <div class="auth-hint">
+          Default Admin: <code>admin</code> / <code>admin123</code>
+        </div>
+      </div>
+
+      <!-- SIGN UP FORM -->
+      <div class="auth-form" id="formSignUp" style="display:none">
+        <div class="form-group">
+          <label class="form-label">Full Name <span class="required">*</span></label>
+          <input type="text" id="regName" class="form-control" placeholder="e.g. Ahmed Ali" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Username <span class="required">*</span></label>
+          <input type="text" id="regUsername" class="form-control" placeholder="e.g. ahmed01" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input type="email" id="regEmail" class="form-control" placeholder="e.g. ahmed@ned.edu.pk" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password <span class="required">*</span></label>
+          <div class="pw-wrap">
+            <input type="password" id="regPassword" class="form-control" placeholder="Min 6 characters" />
+            <button class="pw-toggle" onclick="togglePw('regPassword', this)" type="button">
+              <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+            </button>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-full" id="registerBtn">Create Account →</button>
+        <div class="auth-hint">
+          Already have an account? <span class="auth-link" onclick="switchTab('signin')">Sign in here</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
