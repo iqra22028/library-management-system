@@ -11,7 +11,7 @@ const db = new Pool({
   port: 5432,
   database: 'libraryos',
   user: 'postgres',
-  password: 'admin123', // ← CHANGE THIS to your PostgreSQL password
+  password: 'admin123',
 });
 
 db.connect((err) => {
@@ -19,7 +19,26 @@ db.connect((err) => {
   else console.log('Connected to PostgreSQL!');
 });
 
-// BOOKS
+/* ================= ADMIN CREATE ================= */
+app.post('/api/create-admin', async (req, res) => {
+  try {
+    const { name, username, password } = req.body;
+    const check = await db.query(`SELECT * FROM members WHERE role='admin'`);
+    if (check.rows.length > 0) {
+      return res.status(400).json({ error: 'Admin already exists' });
+    }
+    const r = await db.query(
+      `INSERT INTO members (name, username, password, role)
+       VALUES ($1,$2,$3,'admin') RETURNING *`,
+      [name, username, password]
+    );
+    res.json(r.rows[0]);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+/* ================= BOOKS ================= */
 app.get('/api/books', async (req, res) => {
   try {
     const r = await db.query('SELECT * FROM books ORDER BY id');
@@ -58,7 +77,7 @@ app.delete('/api/books/:id', async (req, res) => {
   } catch(e) { res.status(500).json({error: e.message}); }
 });
 
-// MEMBERS
+/* ================= MEMBERS ================= */
 app.get('/api/members', async (req, res) => {
   try {
     const r = await db.query('SELECT * FROM members ORDER BY id');
@@ -88,21 +107,24 @@ app.put('/api/members/:id/toggle', async (req, res) => {
   } catch(e) { res.status(500).json({error: e.message}); }
 });
 
-// LOGIN
+/* ================= LOGIN ================= */
 app.post('/api/login', async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const { username, password, role } = req.body;
     const r = await db.query(
-      'SELECT * FROM members WHERE username=$1 AND password=$2',
-      [username, password]
+      'SELECT * FROM members WHERE username=$1 AND password=$2 AND role=$3',
+      [username, password, role]
     );
     if (r.rows.length === 0)
-      return res.status(401).json({ error: 'Invalid username or password' });
-    res.json(r.rows[0]);
+      return res.status(401).json({ error: 'Invalid credentials or role' });
+    const user = r.rows[0];
+    if (user.active === false)
+      return res.status(403).json({ error: 'Account is inactive. Contact admin.' });
+    res.json(user);
   } catch(e) { res.status(500).json({error: e.message}); }
 });
 
-// TRANSACTIONS
+/* ================= TRANSACTIONS ================= */
 app.get('/api/transactions', async (req, res) => {
   try {
     const r = await db.query('SELECT * FROM transactions ORDER BY id DESC');
@@ -110,9 +132,39 @@ app.get('/api/transactions', async (req, res) => {
   } catch(e) { res.status(500).json({error: e.message}); }
 });
 
+// Get transactions for a specific member
+app.get('/api/transactions/member/:member_id', async (req, res) => {
+  try {
+    const r = await db.query(
+      'SELECT * FROM transactions WHERE member_id=$1 ORDER BY id DESC',
+      [req.params.member_id]
+    );
+    res.json(r.rows);
+  } catch(e) { res.status(500).json({error: e.message}); }
+});
+
 app.post('/api/transactions', async (req, res) => {
   try {
     const { member_id, book_id, issue_date, due_date } = req.body;
+
+    // Check max 2 books rule
+    const activeCheck = await db.query(
+      `SELECT COUNT(*) FROM transactions WHERE member_id=$1 AND status='issued'`,
+      [member_id]
+    );
+    if (parseInt(activeCheck.rows[0].count) >= 2) {
+      return res.status(400).json({ error: 'Member already has 2 active books. Cannot issue more.' });
+    }
+
+    // Check unpaid fine rule
+    const fineCheck = await db.query(
+      `SELECT * FROM transactions WHERE member_id=$1 AND fine > 0 AND fine_paid=false AND status='returned'`,
+      [member_id]
+    );
+    if (fineCheck.rows.length > 0) {
+      return res.status(400).json({ error: 'Member has unpaid fines. Please clear fines before issuing new books.' });
+    }
+
     const r = await db.query(
       `INSERT INTO transactions (member_id,book_id,issue_date,due_date)
        VALUES ($1,$2,$3,$4) RETURNING *`,
