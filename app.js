@@ -92,7 +92,8 @@ function startLoginParticles() {
       for (let j = i + 1; j < dots.length; j++) {
         const dx = dots[i].x - dots[j].x;
         const dy = dots[i].y - dots[j].y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
+        // FIX [javascript:S7769]: Use Math.hypot() instead of Math.sqrt(dx*dx + dy*dy)
+        const dist = Math.hypot(dx, dy);
         if (dist < 140) {
           ctx.beginPath();
           ctx.strokeStyle = `rgba(26,58,92,${0.07 * (1 - dist / 140)})`;
@@ -387,11 +388,15 @@ function renderReturnReminders() {
               const book   = allBooks.find(b=>b.id===t.book_id)||{};
               const due    = new Date(t.due_date);
               const diff   = Math.ceil((due-now)/(1000*60*60*24));
-              const label  = diff < 0
-                ? `<span class="badge badge-red">Overdue ${Math.abs(diff)}d</span>`
-                : diff === 0
-                  ? `<span class="badge badge-orange">Due Today</span>`
-                  : `<span class="badge badge-orange">Due in ${diff}d</span>`;
+              // FIX [javascript:S3358]: Extract nested ternary into independent statements
+              let label;
+              if (diff < 0) {
+                label = `<span class="badge badge-red">Overdue ${Math.abs(diff)}d</span>`;
+              } else if (diff === 0) {
+                label = `<span class="badge badge-orange">Due Today</span>`;
+              } else {
+                label = `<span class="badge badge-orange">Due in ${diff}d</span>`;
+              }
               return `<tr>
                 <td>${esc(member.name||'Unknown')}</td>
                 <td>${esc(book.title||'Unknown')}</td>
@@ -417,10 +422,15 @@ function renderRecentTransactions() {
     const book   = allBooks.find(b=>b.id===t.book_id) || {};
     const now    = new Date();
     const due    = new Date(t.due_date);
-    let badge    = '';
-    if (t.status === 'returned') badge = '<span class="badge badge-green">Returned</span>';
-    else if (due < now)          badge = '<span class="badge badge-red">Overdue</span>';
-    else                         badge = '<span class="badge badge-orange">Issued</span>';
+    // FIX [javascript:S3358]: Extract nested ternary into independent statements
+    let badge;
+    if (t.status === 'returned') {
+      badge = '<span class="badge badge-green">Returned</span>';
+    } else if (due < now) {
+      badge = '<span class="badge badge-red">Overdue</span>';
+    } else {
+      badge = '<span class="badge badge-orange">Issued</span>';
+    }
     return `<tr>
       <td>${member.name||'Unknown'}</td>
       <td>${book.title||'Unknown'}</td>
@@ -558,7 +568,8 @@ function editBook(id) {
 
       // Client-side ISBN validation
       if (isbnVal.length > 0) {
-        const isbnClean = isbnVal.replace(/-/g, '');
+        // FIX [javascript:S7781]: Use replaceAll() instead of replace() with global regex
+        const isbnClean = isbnVal.replaceAll('-', '');
         if (!/^\d+$/.test(isbnClean)) {
           showToast('ISBN must contain numbers only (dashes allowed).', 'error');
           return false; // prevent modal close
@@ -767,16 +778,25 @@ function renderTransactions() {
     const book    = allBooks.find(b=>b.id===t.book_id)||{};
     const now     = new Date();
     const due     = new Date(t.due_date);
-    let status    = '';
-    if (t.status==='returned') status = '<span class="badge badge-green">Returned</span>';
-    else if (due < now)        status = '<span class="badge badge-red">Overdue</span>';
-    else                       status = '<span class="badge badge-orange">Issued</span>';
+    // FIX [javascript:S3358]: Extract nested ternary into independent statements
+    let status;
+    if (t.status==='returned') {
+      status = '<span class="badge badge-green">Returned</span>';
+    } else if (due < now) {
+      status = '<span class="badge badge-red">Overdue</span>';
+    } else {
+      status = '<span class="badge badge-orange">Issued</span>';
+    }
 
-    const fineBadge = t.fine > 0
-      ? (t.fine_paid
-          ? `<span class="badge badge-green">PKR ${t.fine} ✓</span>`
-          : `<span class="badge badge-red">PKR ${t.fine}</span>`)
-      : '—';
+    // FIX [javascript:S3358]: Extract nested ternary into independent statements
+    let fineBadge;
+    if (t.fine > 0) {
+      fineBadge = t.fine_paid
+        ? `<span class="badge badge-green">PKR ${t.fine} ✓</span>`
+        : `<span class="badge badge-red">PKR ${t.fine}</span>`;
+    } else {
+      fineBadge = '—';
+    }
 
     let actions = '';
     if (t.status === 'issued') {
@@ -910,10 +930,15 @@ function viewMemberReport(memberId) {
     tbody.innerHTML = mTx.map((t,i)=>{
       const book = allBooks.find(b=>b.id===t.book_id)||{};
       const due  = new Date(t.due_date);
-      let status = '';
-      if (t.status==='returned') status='<span class="badge badge-green">Returned</span>';
-      else if (due<now)          status='<span class="badge badge-red">Overdue</span>';
-      else                       status='<span class="badge badge-orange">Issued</span>';
+      // FIX [javascript:S3358]: Extract nested ternary into independent statements
+      let status;
+      if (t.status==='returned') {
+        status = '<span class="badge badge-green">Returned</span>';
+      } else if (due<now) {
+        status = '<span class="badge badge-red">Overdue</span>';
+      } else {
+        status = '<span class="badge badge-orange">Issued</span>';
+      }
       return `<tr>
         <td>${i+1}</td>
         <td>${esc(book.title||'Unknown')}</td>
@@ -960,7 +985,15 @@ function exportCSV(type) {
       const book   = allBooks.find(b=>b.id===t.book_id)||{};
       const now    = new Date();
       const due    = new Date(t.due_date);
-      const status = t.status==='returned' ? 'Returned' : due < now ? 'Overdue' : 'Issued';
+      // FIX [javascript:S3358]: Extract nested ternary into independent statements
+      let status;
+      if (t.status==='returned') {
+        status = 'Returned';
+      } else if (due < now) {
+        status = 'Overdue';
+      } else {
+        status = 'Issued';
+      }
       return `${t.id},"${member.name||''}","${book.title||''}","${t.issue_date}","${t.due_date}","${t.return_date||''}",${t.fine||0},"${t.fine_paid?'Yes':'No'}","${status}"`;
     }).join('\n');
   }
@@ -992,7 +1025,8 @@ function wireAdminForms() {
 
     // Client-side ISBN validation
     if (isbn.length > 0) {
-      const isbnClean = isbn.replace(/-/g, '');
+      // FIX [javascript:S7781]: Use replaceAll() instead of replace() with global regex
+      const isbnClean = isbn.replaceAll('-', '');
       if (!/^\d+$/.test(isbnClean)) {
         showToast('ISBN must contain numbers only (dashes allowed).', 'error');
         return;
@@ -1060,7 +1094,9 @@ function wireAdminForms() {
 
     // Phone uniqueness (if provided)
     if (phone) {
-      const dupPhone = allMembers.find(m => m.phone && m.phone.replace(/\D/g,'') === phone.replace(/\D/g,''));
+      // FIX [javascript:S7781]: Use replaceAll() instead of replace() with global regex
+      const phoneDigits = phone.replaceAll(/\D/g, '');
+      const dupPhone = allMembers.find(m => m.phone && m.phone.replaceAll(/\D/g, '') === phoneDigits);
       if (dupPhone) {
         showToast(`Phone number "${phone}" is already registered.`, 'error');
         document.getElementById('memberPhone').focus();
@@ -1122,7 +1158,15 @@ function renderMemberDashboard() {
             const book = allBooks.find(b=>b.id===t.book_id)||{};
             const due  = new Date(t.due_date);
             const diff = Math.ceil((due-now)/(1000*60*60*24));
-            const label= diff<0?`overdue by ${Math.abs(diff)} day(s)`:diff===0?'due today':`due in ${diff} day(s)`;
+            // FIX [javascript:S3358]: Extract nested ternary into independent statements
+            let label;
+            if (diff < 0) {
+              label = `overdue by ${Math.abs(diff)} day(s)`;
+            } else if (diff === 0) {
+              label = 'due today';
+            } else {
+              label = `due in ${diff} day(s)`;
+            }
             return `<div style="margin-top:6px;font-size:0.85rem">📚 <strong>${esc(book.title||'Unknown')}</strong> — ${label}</div>`;
           }).join('')}
         </div>`;
@@ -1140,10 +1184,15 @@ function renderMemberDashboard() {
     const book = allBooks.find(b=>b.id===t.book_id)||{};
     const due  = new Date(t.due_date);
     const diff = Math.ceil((due-now)/(1000*60*60*24));
-    const daysLabel = diff < 0
-      ? `<span style="color:var(--red)">Overdue ${Math.abs(diff)}d</span>`
-      : diff === 0 ? `<span style="color:var(--orange)">Due today</span>`
-      : `${diff} days`;
+    // FIX [javascript:S3358]: Extract nested ternary into independent statements
+    let daysLabel;
+    if (diff < 0) {
+      daysLabel = `<span style="color:var(--red)">Overdue ${Math.abs(diff)}d</span>`;
+    } else if (diff === 0) {
+      daysLabel = `<span style="color:var(--orange)">Due today</span>`;
+    } else {
+      daysLabel = `${diff} days`;
+    }
     const status = diff < 0
       ? '<span class="badge badge-red">Overdue</span>'
       : '<span class="badge badge-orange">Issued</span>';
@@ -1169,7 +1218,15 @@ function renderMyBooks() {
     const book = allBooks.find(b=>b.id===t.book_id)||{};
     const due  = new Date(t.due_date);
     const diff = Math.ceil((due-now)/(1000*60*60*24));
-    const daysLabel = diff<0?`<span style="color:var(--red)">Overdue ${Math.abs(diff)}d</span>`:diff===0?'<span style="color:var(--orange)">Due today</span>':`${diff} days`;
+    // FIX [javascript:S3358]: Extract nested ternary into independent statements
+    let daysLabel;
+    if (diff < 0) {
+      daysLabel = `<span style="color:var(--red)">Overdue ${Math.abs(diff)}d</span>`;
+    } else if (diff === 0) {
+      daysLabel = '<span style="color:var(--orange)">Due today</span>';
+    } else {
+      daysLabel = `${diff} days`;
+    }
     const status = diff<0?'<span class="badge badge-red">Overdue</span>':'<span class="badge badge-orange">Issued</span>';
     return `<tr>
       <td>${i+1}</td>
@@ -1215,10 +1272,15 @@ function renderMyHistory() {
   tbody.innerHTML = allTx.map((t,i)=>{
     const book = allBooks.find(b=>b.id===t.book_id)||{};
     const due  = new Date(t.due_date);
-    let status = '';
-    if (t.status==='returned') status='<span class="badge badge-green">Returned</span>';
-    else if (due<now)          status='<span class="badge badge-red">Overdue</span>';
-    else                       status='<span class="badge badge-orange">Issued</span>';
+    // FIX [javascript:S3358]: Extract nested ternary into independent statements
+    let status;
+    if (t.status==='returned') {
+      status = '<span class="badge badge-green">Returned</span>';
+    } else if (due<now) {
+      status = '<span class="badge badge-red">Overdue</span>';
+    } else {
+      status = '<span class="badge badge-orange">Issued</span>';
+    }
     return `<tr>
       <td>${i+1}</td>
       <td><strong>${esc(book.title||'Unknown')}</strong></td>
@@ -1345,19 +1407,26 @@ globalThis.togglePw = function(inputId) {
 function fmtDate(d) {
   if (!d) return '—';
   const date = new Date(d);
-  if (isNaN(date)) return '—';
+  // FIX [javascript:S7773]: Use Number.isNaN instead of isNaN
+  if (Number.isNaN(date.getTime())) return '—';
   return date.toLocaleDateString('en-PK', { day:'2-digit', month:'short', year:'numeric' });
 }
 
 function esc(str) {
   if (!str) return '';
-  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  // FIX [javascript:S7781]: Use replaceAll() instead of replace() with global regex
+  return String(str)
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;');
 }
 
 function animateCount(id, target) {
   const el = document.getElementById(id);
   if (!el) return;
-  const start = parseInt(el.textContent) || 0;
+  // FIX [javascript:S7773]: Use Number.parseInt instead of parseInt
+  const start = Number.parseInt(el.textContent, 10) || 0;
   if (start === target) return;
   const duration = 600, steps = 20;
   let step = 0;
